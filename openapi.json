@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Objects API",
-    "description": "This is an API that is used to browse the numerous objects available in the data warehouse.\n---\nUsing this API, you can retrieve the CRM Cases, Solutions, Projects, and JIRA Issues.\n",
+    "description": "This is an API that is used to browse the numerous objects available in the data warehouse.\n---\nUsing this API, you can retrieve the CRM Cases, Solutions, Projects, JIRA Issues, and Defects.\n",
     "termsOfService": "http://swagger.io/terms/",
     "contact": {
       "name": "Ralph Abou Haidar",
