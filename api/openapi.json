@@ -1,0 +1,1410 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Objects API",
+    "description": "This is an API that is used to browse the numerous objects available in the data warehouse.\n---\nUsing this API, you can retrieve the CRM Cases, Solutions, Projects, and JIRA Issues.\n",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "name": "Ralph Abou Haidar",
+      "email": "Ralph.ABOUHAIDAR@murex.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "{protocol}://talendesb1:8040/services/objects",
+      "variables": {
+        "protocol": {
+          "default": "http",
+          "enum": [
+            "http",
+            "https"
+          ]
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/cases": {
+      "get": {
+        "tags": [
+          "Cases"
+        ],
+        "summary": "Return all the PEGA cases",
+        "description": "Return the (most recently updated) PEGA cases that are in the data warehouse.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "format",
+            "description": "The expected format of the response (XML, json, or CSV)",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "xml",
+                "json",
+                "csv"
+              ],
+              "example": "xml"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "The number of cases to return",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "example": 100
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "The ordering of the cases in the response.\n\n`?sort={columnName}:{order}`\n\n`?sort={columnName1}:{order1}&sort={columnName2}:{order2}`\n",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "case_id:asc",
+                "creation_date:desc"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "download",
+            "description": "Specify whether to download the response in a file or not",
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                false,
+                true
+              ],
+              "example": false,
+              "default": false
+            }
+          },
+          {
+            "in": "query",
+            "name": "columns",
+            "description": "The attributes to be shown (all by default)",
+            "schema": {
+              "type": "string",
+              "example": "case_id,assigned_to,contact,created_by,status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "filters",
+            "description": "Filters applied on {columnName}\n\n`?{columnName}={value}` returns cases with {columnName} strictly equals to {value} \n\n`?{columnName}=gte:{value}` returns cases with {columnName} greater than or equals to {value}\n\n`?{columnName}=lte:{value}` returns cases with {columnName} less than or equals to {value}\n\n`?{columnName}=gt:{value}` returns cases with {columnName} greater than {value}\n\n`?{columnName}=lt:{value}` returns cases with {columnName} less than {value}\n\n`?{columnName}={value1},{value2}` returns cases with {columnName} = {value1} OR {value2}\n\nN.B. To apply multiple optional filters on {columnName}, simply separate the filters with a comma ','\n\nThe example below returns all cases with caseID between 100 and 200, and the status being either 'Closed-Resolved' OR 'Open-New'.\n",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": true,
+            "example": {
+              "case_id": [
+                "gte:100",
+                "lte:200"
+              ],
+              "status": "Closed-Resolved,Open-New"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of cases in specified format.",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cases"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cases"
+                }
+              },
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No cases found."
+          }
+        }
+      }
+    },
+    "/projects": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Return all the ERP projects",
+        "description": "Return the ERP projects that are in the data warehouse.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "format",
+            "description": "The expected format of the response (XML, json, or CSV)",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "xml",
+                "json",
+                "csv"
+              ],
+              "example": "xml"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "The number of projects to return",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "example": 100
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "The ordering of the projects in the response.\n\n`?sort={columnName}:{order}`\n\n`?sort={columnName1}:{order1}&sort={columnName2}:{order2}`\n",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "project_id:asc",
+                "creation_date:desc"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "download",
+            "description": "Specify whether to download the response in a file or not",
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                false,
+                true
+              ],
+              "example": false,
+              "default": false
+            }
+          },
+          {
+            "in": "query",
+            "name": "columns",
+            "description": "The attributes to be shown (all by default)",
+            "schema": {
+              "type": "string",
+              "example": "project_id,delivery_mode,creation_date,suspended,test_architect"
+            }
+          },
+          {
+            "in": "query",
+            "name": "filters",
+            "description": "Filters applied on {columnName}\n\n`?{columnName}={value}` returns projects with {columnName} strictly equals to {value} \n\n`?{columnName}=gte:{value}` returns projects with {columnName} greater than or equals to {value}\n\n`?{columnName}=lte:{value}` returns projects with {columnName} less than or equals to {value}\n\n`?{columnName}=gt:{value}` returns projects with {columnName} greater than {value}\n\n`?{columnName}=lt:{value}` returns projects with {columnName} less than {value}\n\n`?{columnName}={value1},{value2}` returns projects with {columnName} = {value1} OR {value2}\n\nN.B. To apply multiple optional filters on {columnName}, simply separate the filters with a comma ','\n\nThe example below returns all projects with project_id = 50 OR project_id >= 100 and with a creation date older than 2010.\n",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": true,
+            "example": {
+              "project_id": "50,gte:100",
+              "creation_date": "lt:01-01-2010"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of projects in specified format.",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Projects"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Projects"
+                }
+              },
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No projects found."
+          }
+        }
+      }
+    },
+    "/solutions": {
+      "get": {
+        "tags": [
+          "Solutions"
+        ],
+        "summary": "Return all the CRM solutions",
+        "description": "Return the CRM solutions that are in the data warehouse.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "format",
+            "description": "The expected format of the response (XML, json, or CSV)",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "xml",
+                "json",
+                "csv"
+              ],
+              "example": "xml"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "The number of solutions to return",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "example": 100
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "The ordering of the solutions in the response.\n\n`?sort={columnName}:{order}`\n\n`?sort={columnName1}:{order1}&sort={columnName2}:{order2}`\n",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "solution_id:asc",
+                "creation_date:desc"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "download",
+            "description": "Specify whether to download the response in a file or not",
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                false,
+                true
+              ],
+              "example": false,
+              "default": false
+            }
+          },
+          {
+            "in": "query",
+            "name": "columns",
+            "description": "The attributes to be shown (all by default)",
+            "schema": {
+              "type": "string",
+              "example": "solution_id,description,status,created_by,type,last_modification_date"
+            }
+          },
+          {
+            "in": "query",
+            "name": "filters",
+            "description": "Filters applied on {columnName}\n\n`?{columnName}={value}` returns solutions with {columnName} strictly equals to {value} \n\n`?{columnName}=gte:{value}` returns solutions with {columnName} greater than or equals to {value}\n\n`?{columnName}=lte:{value}` returns solutions with {columnName} less than or equals to {value}\n\n`?{columnName}=gt:{value}` returns solutions with {columnName} greater than {value}\n\n`?{columnName}=lt:{value}` returns solutions with {columnName} less than {value}\n\n`?{columnName}={value1},{value2}` returns solutions with {columnName} = {value1} OR {value2}\n\nN.B. To apply multiple optional filters on {columnName}, simply separate the filters with a comma ','\n\nThe example below returns all solutions with the solutionID = 50 OR >=100, and last modification date between 2010 and 2015.\n",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": true,
+            "example": {
+              "solution_id": "50,gte:100",
+              "last_modification_date": [
+                "gt:01-01-2010",
+                "lt:01-01-2015"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of solutions in specified format.",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Solutions"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Solutions"
+                }
+              },
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No solutions found."
+          }
+        }
+      }
+    },
+    "/jira": {
+      "get": {
+        "tags": [
+          "Jira Issues"
+        ],
+        "summary": "Return all the JIRA issues",
+        "description": "Return the JIRA issues that are in the data warehouse.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "format",
+            "description": "The expected format of the response (XML, json, or CSV)",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "xml",
+                "json",
+                "csv"
+              ],
+              "example": "xml"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "The number of issues to return",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "example": 100
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "The ordering of the issues in the response.\n\n`?sort={columnName}:{order}`\n\n`?sort={columnName1}:{order1}&sort={columnName2}:{order2}`\n",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "issue_key:asc",
+                "created:desc"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "download",
+            "description": "Specify whether to download the response in a file or not",
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                false,
+                true
+              ],
+              "example": false,
+              "default": false
+            }
+          },
+          {
+            "in": "query",
+            "name": "columns",
+            "description": "The attributes to be shown (all by default)",
+            "schema": {
+              "type": "string",
+              "example": "issue_key,ticket_title,ticket_description,reporter,assignee,due,created"
+            }
+          },
+          {
+            "in": "query",
+            "name": "filters",
+            "description": "Filters applied on {columnName}\n\n`?{columnName}={value}` returns issues with {columnName} strictly equals to {value} \n\n`?{columnName}=gte:{value}` returns issues with {columnName} greater than or equals to {value}\n\n`?{columnName}=lte:{value}` returns issues with {columnName} less than or equals to {value}\n\n`?{columnName}=gt:{value}` returns issues with {columnName} greater than {value}\n\n`?{columnName}=lt:{value}` returns issues with {columnName} less than {value}\n\n`?{columnName}={value1},{value2}` returns issues with {columnName} = {value1} OR {value2}\n\nN.B. To apply multiple optional filters on {columnName}, simply separate the filters with a comma ','\n\nThe example below returns all issues with the issue key = 50 OR >=100, and created between 2010 and 2015.\n",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": true,
+            "example": {
+              "issue_key": "50,gte:100",
+              "created": [
+                "gt:01-01-2010",
+                "lt:01-01-2015"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of issues in specified format.",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/JiraIssues"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JiraIssues"
+                }
+              },
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No issues found."
+          }
+        }
+      }
+    },
+    "/defects": {
+      "get": {
+        "tags": [
+          "Defects"
+        ],
+        "summary": "Return all the defects",
+        "description": "Return the defects that are in the data warehouse.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "format",
+            "description": "The expected format of the response (XML, json, or CSV)",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "xml",
+                "json",
+                "csv"
+              ],
+              "example": "xml"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "The number of defects to return",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "example": 100
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "The ordering of the defects in the response.\n\n`?sort={columnName}:{order}`\n\n`?sort={columnName1}:{order1}&sort={columnName2}:{order2}`\n",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "defect_id:asc",
+                "creation_id:desc"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "download",
+            "description": "Specify whether to download the response in a file or not",
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                false,
+                true
+              ],
+              "example": false,
+              "default": false
+            }
+          },
+          {
+            "in": "query",
+            "name": "columns",
+            "description": "The attributes to be shown (all by default)",
+            "schema": {
+              "type": "string",
+              "example": "defect_id,defect_source,creation_date,source,related_case_id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "filters",
+            "description": "Filters applied on {columnName}\n\n`?{columnName}={value}` returns defects with {columnName} strictly equals to {value} \n\n`?{columnName}=gte:{value}` returns defects with {columnName} greater than or equals to {value}\n\n`?{columnName}=lte:{value}` returns defects with {columnName} less than or equals to {value}\n\n`?{columnName}=gt:{value}` returns defects with {columnName} greater than {value}\n\n`?{columnName}=lt:{value}` returns defects with {columnName} less than {value}\n\n`?{columnName}={value1},{value2}` returns defects with {columnName} = {value1} OR {value2}\n\nN.B. To apply multiple optional filters on {columnName}, simply separate the filters with a comma ','\n\nThe example below returns all defects with the defect ID = 50 OR >=100, and created between 2010 and 2015.\n",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": true,
+            "example": {
+              "defect_id": "50,gte:100",
+              "creation_date": [
+                "gt:01-01-2010",
+                "lt:01-01-2015"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of defects in specified format.",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Defects"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Defects"
+                }
+              },
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No issues found."
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": [
+          "Fields"
+        ],
+        "summary": "Return all the fields",
+        "description": "Return the available fields.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "download",
+            "description": "Specify whether to download the response in a file or not",
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                false,
+                true
+              ],
+              "example": false,
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of fields in XML."
+          },
+          "404": {
+            "description": "No fields found."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Case": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string"
+          },
+          "assigned_to": {
+            "type": "string"
+          },
+          "asset_class_label": {
+            "type": "string"
+          },
+          "change_request_type": {
+            "type": "string"
+          },
+          "client_comment": {
+            "type": "string"
+          },
+          "client_priority": {
+            "type": "string"
+          },
+          "closed_by_client": {
+            "type": "string"
+          },
+          "company": {
+            "type": "string"
+          },
+          "contact": {
+            "type": "string"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "created_in_psoft": {
+            "type": "string"
+          },
+          "creation_date": {
+            "type": "string"
+          },
+          "customer_reference": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "development_request_type": {
+            "type": "string"
+          },
+          "environment_type": {
+            "type": "string"
+          },
+          "escalation_level": {
+            "type": "string"
+          },
+          "fix_availability": {
+            "type": "string"
+          },
+          "fix_needed": {
+            "type": "string"
+          },
+          "has_solution": {
+            "type": "string"
+          },
+          "incident_origin": {
+            "type": "string"
+          },
+          "incident_type": {
+            "type": "string"
+          },
+          "internal_comment": {
+            "type": "string"
+          },
+          "keyword1": {
+            "type": "string"
+          },
+          "keyword2": {
+            "type": "string"
+          },
+          "last_solution_type": {
+            "type": "string"
+          },
+          "hls": {
+            "type": "string"
+          },
+          "last_update_date": {
+            "type": "string"
+          },
+          "last_updated_by": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "module": {
+            "type": "string"
+          },
+          "murex_priority": {
+            "type": "string"
+          },
+          "murex_severity": {
+            "type": "string"
+          },
+          "product": {
+            "type": "string"
+          },
+          "provider_group": {
+            "type": "string"
+          },
+          "recommended_priority": {
+            "type": "string"
+          },
+          "regression": {
+            "type": "string"
+          },
+          "related_solution_id": {
+            "type": "string"
+          },
+          "relationship": {
+            "type": "string"
+          },
+          "relationship_type": {
+            "type": "string"
+          },
+          "release_patch": {
+            "type": "string"
+          },
+          "reported_asset_class": {
+            "type": "string"
+          },
+          "reported_module": {
+            "type": "string"
+          },
+          "service_request_type": {
+            "type": "string"
+          },
+          "request_date": {
+            "type": "string"
+          },
+          "revised_date": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string"
+          },
+          "signed_off": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "status_comment": {
+            "type": "string"
+          },
+          "sub_type": {
+            "type": "string"
+          },
+          "system_source": {
+            "type": "string"
+          },
+          "target_patch": {
+            "type": "string"
+          },
+          "target_release": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "to_be_discussed": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "urgent": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "assignee_team": {
+            "type": "string"
+          },
+          "user_defined_field1": {
+            "type": "string"
+          },
+          "user_defined_field2": {
+            "type": "string"
+          },
+          "user_defined_field3": {
+            "type": "string"
+          },
+          "user_defined_field4": {
+            "type": "string"
+          },
+          "user_defined_field5": {
+            "type": "string"
+          },
+          "user_defined_field6": {
+            "type": "string"
+          }
+        }
+      },
+      "Cases": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Case"
+        }
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "account_name": {
+            "type": "string"
+          },
+          "account_country": {
+            "type": "string"
+          },
+          "account_id": {
+            "type": "string"
+          },
+          "account_bu_id": {
+            "type": "string"
+          },
+          "account_bu_region": {
+            "type": "string"
+          },
+          "account_bu_manager": {
+            "type": "string"
+          },
+          "account_bu_name": {
+            "type": "string"
+          },
+          "account_is_sub_bu": {
+            "type": "string"
+          },
+          "account_parent_bu": {
+            "type": "string"
+          },
+          "company_name": {
+            "type": "string"
+          },
+          "company_country": {
+            "type": "string"
+          },
+          "company_id": {
+            "type": "string"
+          },
+          "company_sector": {
+            "type": "string"
+          },
+          "company_segment": {
+            "type": "string"
+          },
+          "company_short_name": {
+            "type": "string"
+          },
+          "company_status": {
+            "type": "string"
+          },
+          "company_type": {
+            "type": "string"
+          },
+          "company_bu_id": {
+            "type": "string"
+          },
+          "company_bu_region": {
+            "type": "string"
+          },
+          "company_bu_manager": {
+            "type": "string"
+          },
+          "company_bu_name": {
+            "type": "string"
+          },
+          "company_is_sub_bu": {
+            "type": "string"
+          },
+          "company_parent_bu": {
+            "type": "string"
+          },
+          "instance_id": {
+            "type": "string"
+          },
+          "instance_last_update": {
+            "type": "string"
+          },
+          "instance_name": {
+            "type": "string"
+          },
+          "instance_status": {
+            "type": "string"
+          },
+          "instance_bu_id": {
+            "type": "string"
+          },
+          "instance_bu_region": {
+            "type": "string"
+          },
+          "instance_bu_manager": {
+            "type": "string"
+          },
+          "instance_bu_name": {
+            "type": "string"
+          },
+          "instance_is_sub_bu": {
+            "type": "string"
+          },
+          "instance_parent_bu": {
+            "type": "string"
+          },
+          "production_director": {
+            "type": "string"
+          },
+          "production_manager": {
+            "type": "string"
+          },
+          "biz_dev": {
+            "type": "string"
+          },
+          "mlc_delivered_patch": {
+            "type": "string"
+          },
+          "mx_delivered_patch": {
+            "type": "string"
+          },
+          "mlc_planned_release": {
+            "type": "string"
+          },
+          "mx_planned_release": {
+            "type": "string"
+          },
+          "client_machine_java": {
+            "type": "string"
+          },
+          "client_machine_os": {
+            "type": "string"
+          },
+          "client_support_organization": {
+            "type": "string"
+          },
+          "creation_date": {
+            "type": "string"
+          },
+          "current_prod_nickname": {
+            "type": "string"
+          },
+          "current_prod_patch_mlc": {
+            "type": "string"
+          },
+          "current_prod_patch_mx": {
+            "type": "string"
+          },
+          "delivery_mode": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "first_go_live_date": {
+            "type": "string"
+          },
+          "follows_si": {
+            "type": "string"
+          },
+          "grid_computing": {
+            "type": "string"
+          },
+          "grid_vendor": {
+            "type": "string"
+          },
+          "grid_version": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "last_modified_date": {
+            "type": "string"
+          },
+          "m0_baseline": {
+            "type": "string"
+          },
+          "m1_patch": {
+            "type": "string"
+          },
+          "m2_patch": {
+            "type": "string"
+          },
+          "m3_patch": {
+            "type": "string"
+          },
+          "main_system_integrator": {
+            "type": "string"
+          },
+          "murex_mail_group": {
+            "type": "string"
+          },
+          "project_name": {
+            "type": "string"
+          },
+          "next_planned_patch_mlc": {
+            "type": "string"
+          },
+          "next_planned_patch_mx": {
+            "type": "string"
+          },
+          "next_release_mlc": {
+            "type": "string"
+          },
+          "next_release_mx": {
+            "type": "string"
+          },
+          "ongoing_activity": {
+            "type": "string"
+          },
+          "operational_office": {
+            "type": "string"
+          },
+          "project_parent": {
+            "type": "string"
+          },
+          "processor_type": {
+            "type": "string"
+          },
+          "project_rmspoc": {
+            "type": "string"
+          },
+          "solution_architect": {
+            "type": "string"
+          },
+          "suspended": {
+            "type": "string"
+          },
+          "technical_architect": {
+            "type": "string"
+          },
+          "test_architect": {
+            "type": "string"
+          },
+          "uat_start_date": {
+            "type": "string"
+          }
+        }
+      },
+      "Projects": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Project"
+        }
+      },
+      "Solution": {
+        "type": "object",
+        "properties": {
+          "solution_id": {
+            "type": "string"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "creation_date": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "last_modification_date": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "Solutions": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Solution"
+        }
+      },
+      "JiraIssue": {
+        "type": "object",
+        "properties": {
+          "issue_key": {
+            "type": "string"
+          },
+          "reporter": {
+            "type": "string"
+          },
+          "assignee": {
+            "type": "string"
+          },
+          "due": {
+            "type": "string"
+          },
+          "estimated": {
+            "type": "string"
+          },
+          "remaining": {
+            "type": "string"
+          },
+          "logged": {
+            "type": "string"
+          },
+          "created": {
+            "type": "string"
+          },
+          "updated": {
+            "type": "string"
+          },
+          "audit_oprid": {
+            "type": "string"
+          },
+          "audit_stamp": {
+            "type": "string"
+          },
+          "audit_field_name": {
+            "type": "string"
+          },
+          "last_flag": {
+            "type": "string"
+          },
+          "resolved": {
+            "type": "string"
+          },
+          "deleted_flag": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string"
+          },
+          "pps_defect_source": {
+            "type": "string"
+          },
+          "severity_flag1": {
+            "type": "string"
+          },
+          "severity_flag2": {
+            "type": "string"
+          },
+          "pps_defect": {
+            "type": "string"
+          },
+          "pes_pm_group": {
+            "type": "string"
+          },
+          "project": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "resolution": {
+            "type": "string"
+          },
+          "ticket_title": {
+            "type": "string"
+          },
+          "ticket_description": {
+            "type": "string"
+          }
+        }
+      },
+      "JiraIssues": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/JiraIssue"
+        }
+      },
+      "Defect": {
+        "type": "object",
+        "properties": {
+          "asset_class": {
+            "type": "string"
+          },
+          "creation_date": {
+            "type": "string"
+          },
+          "defect_id": {
+            "type": "string"
+          },
+          "defect_source": {
+            "type": "string"
+          },
+          "related_case_id": {
+            "type": "string"
+          },
+          "related_defect_id": {
+            "type": "string"
+          },
+          "internal_only": {
+            "type": "string"
+          },
+          "keyword1": {
+            "type": "string"
+          },
+          "keyword2": {
+            "type": "string"
+          },
+          "last_modification_date": {
+            "type": "string"
+          },
+          "module": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          },
+          "product": {
+            "type": "string"
+          },
+          "product_manager": {
+            "type": "string"
+          },
+          "product_manager_dept": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "dev_plan_creation_date": {
+            "type": "string"
+          },
+          "dev_plan_developer": {
+            "type": "string"
+          },
+          "dev_plan_developer_dept": {
+            "type": "string"
+          },
+          "dev_plan_fix_due": {
+            "type": "string"
+          },
+          "dev_plan_hls": {
+            "type": "string"
+          },
+          "dev_plan_merge": {
+            "type": "string"
+          },
+          "dev_plan_product": {
+            "type": "string"
+          },
+          "dev_plan_product_manager": {
+            "type": "string"
+          },
+          "dev_plan_product_manager_dept": {
+            "type": "string"
+          },
+          "dev_plan_status": {
+            "type": "string"
+          },
+          "dev_plan_tester": {
+            "type": "string"
+          },
+          "dev_plan_tester_dept": {
+            "type": "string"
+          },
+          "dev_plan_version": {
+            "type": "string"
+          },
+          "fix_developer_dept": {
+            "type": "string"
+          },
+          "fix_id": {
+            "type": "string"
+          },
+          "fix_internal": {
+            "type": "string"
+          },
+          "fix_product": {
+            "type": "string"
+          },
+          "fix_version": {
+            "type": "string"
+          },
+          "mr_company": {
+            "type": "string"
+          },
+          "mr_creation_date": {
+            "type": "string"
+          },
+          "mr_developer": {
+            "type": "string"
+          },
+          "mr_developer_dept": {
+            "type": "string"
+          },
+          "mr_project": {
+            "type": "string"
+          },
+          "mr_release_patch": {
+            "type": "string"
+          },
+          "mr_request_date": {
+            "type": "string"
+          },
+          "mr_status": {
+            "type": "string"
+          },
+          "mr_tester": {
+            "type": "string"
+          },
+          "mr_tester_dept": {
+            "type": "string"
+          },
+          "vp_company": {
+            "type": "string"
+          },
+          "vp_creation_date": {
+            "type": "string"
+          },
+          "vp_last_modification_date": {
+            "type": "string"
+          },
+          "vp_product": {
+            "type": "string"
+          },
+          "vp_project": {
+            "type": "string"
+          },
+          "vp_status": {
+            "type": "string"
+          },
+          "vp_type": {
+            "type": "string"
+          },
+          "vp_version": {
+            "type": "string"
+          }
+        }
+      },
+      "Defects": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Defect"
+        }
+      }
+    }
+  }
+}
