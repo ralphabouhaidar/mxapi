@@ -537,7 +537,7 @@
               },
               "example": [
                 "defect_id:asc",
-                "creation_id:desc"
+                "creation_date:desc"
               ]
             }
           },
@@ -561,7 +561,7 @@
             "description": "The attributes to be shown (all by default)",
             "schema": {
               "type": "string",
-              "example": "defect_id,defect_source,creation_date,source,related_case_id"
+              "example": "defect_id,defect_source,creation_date,related_case_id"
             }
           },
           {
